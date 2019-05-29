@@ -1,0 +1,322 @@
+MySQL Shell 8.0.14
+
+Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+ MySQL  JS > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.14 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | X      |
+|  4 | Y      |
++----+--------+
+4 rows in set (2.2332 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select nombre from tablaA where nombre in (select nombre from tablaB);
++--------+
+| nombre |
++--------+
+| A      |
+| B      |
++--------+
+2 rows in set (0.3418 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select nombre from tablaA where nombre not in (select nombre from tablaB);
++--------+
+| nombre |
++--------+
+| C      |
+| D      |
++--------+
+2 rows in set (0.1344 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | X      |
+|  4 | Y      |
++----+--------+
+4 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc tablaB;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(10) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0246 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into tablaB (nombre) values("A");
+Query OK, 1 row affected (1.0571 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | X      |
+|  4 | Y      |
+|  5 | A      |
++----+--------+
+5 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select nombre tablaA where nombre in (select distinct (nombre) from tablaB);
+ERROR: 1054 (42S22): Unknown column 'nombre' in 'field list'
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select distinct(nombre) from tablaB;
++--------+
+| nombre |
++--------+
+| A      |
+| B      |
+| X      |
+| Y      |
++--------+
+4 rows in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaA;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
++----+--------+
+4 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaB,
+                                      -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | X      |
+|  4 | Y      |
+|  5 | A      |
++----+--------+
+5 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > \use sakila
+Default schema set to `sakila`.
+Fetching table and column names from `sakila` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  sakila  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco;
++----------+------------------+
+| id_banco | nombre           |
++----------+------------------+
+|        1 | American Express |
+|        2 | CitiBank         |
+|        3 | Diners Club      |
+|        4 | GE Capital       |
++----------+------------------+
+4 rows in set (0.1493 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tarjetas;
++------------+---------------------------+----------+
+| id_tarjeta | nombre                    | id_banco |
++------------+---------------------------+----------+
+|          1 | American Express          |        1 |
+|          2 | Master Card               |        2 |
+|          3 | Diners Club International |        3 |
+|          4 | Visa                      |        4 |
++------------+---------------------------+----------+
+4 rows in set (0.0505 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into bancos(nombre) values("Banorte"), ("Banrregio"),("Banamex");
+ERROR: 1146 (42S02): Table 'eva_2.bancos' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into bancos(nombre) values("Banorte"), ("Banrregio"), ("Banamex");
+ERROR: 1146 (42S02): Table 'eva_2.bancos' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into banco(nombre) values("Banorte"), ("Banrregio"), ("Banamex");
+Query OK, 3 rows affected (0.1792 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco;
++----------+------------------+
+| id_banco | nombre           |
++----------+------------------+
+|        1 | American Express |
+|        2 | CitiBank         |
+|        3 | Diners Club      |
+|        4 | GE Capital       |
+|        5 | Banorte          |
+|        6 | Banrregio        |
+|        7 | Banamex          |
++----------+------------------+
+7 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco where id_banco not int (select distinct(id_banco) from tarjetas);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'int (select distinct(id_banco) from tarjetas)' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco where id_banco not int (select distinct(id_banco) from tarjeta);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'int (select distinct(id_banco) from tarjeta)' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco where id_banco not in (select distinct(id_banco) from tarjetas);
++----------+-----------+
+| id_banco | nombre    |
++----------+-----------+
+|        5 | Banorte   |
+|        6 | Banrregio |
+|        7 | Banamex   |
++----------+-----------+
+3 rows in set (0.0246 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from banco where id_banco in (select distinct(id_banco) from tarjetas);
++----------+------------------+
+| id_banco | nombre           |
++----------+------------------+
+|        1 | American Express |
+|        2 | CitiBank         |
+|        3 | Diners Club      |
+|        4 | GE Capital       |
++----------+------------------+
+4 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tarjetas;
++------------+---------------------------+----------+
+| id_tarjeta | nombre                    | id_banco |
++------------+---------------------------+----------+
+|          1 | American Express          |        1 |
+|          2 | Master Card               |        2 |
+|          3 | Diners Club International |        3 |
+|          4 | Visa                      |        4 |
++------------+---------------------------+----------+
+4 rows in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre, B.nombre from tarjetas A inner join banco B on A.id_banco = B.id_banco;
++---------------------------+------------------+
+| nombre                    | nombre           |
++---------------------------+------------------+
+| American Express          | American Express |
+| Master Card               | CitiBank         |
+| Diners Club International | Diners Club      |
+| Visa                      | GE Capital       |
++---------------------------+------------------+
+4 rows in set (0.0013 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre, B.nombre from banco A inner join tarjeta B on A.id_banco = B.id_banco;
+ERROR: 1146 (42S02): Table 'eva_2.tarjeta' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre, B.nombre from banco A inner join tarjetas B on A.id_banco = B.id_banco;
++------------------+---------------------------+
+| nombre           | nombre                    |
++------------------+---------------------------+
+| American Express | American Express          |
+| CitiBank         | Master Card               |
+| Diners Club      | Diners Club International |
+| GE Capital       | Visa                      |
++------------------+---------------------------+
+4 rows in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from asignacion_tarjetas;
++-------------+------------+-------------+---------------+------------------+------+
+| card_number | id_tarjeta | id_clientes | fecha_emision | fecha_expiracion | pin  |
++-------------+------------+-------------+---------------+------------------+------+
+| 340525465   |          1 |           1 | 2016-01-08    | 2027-01-08       | 6065 |
++-------------+------------+-------------+---------------+------------------+------+
+1 row in set (0.0517 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc asignacion_tarjetas;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| card_number      | varchar(20) | NO   | PRI | NULL    |       |
+| id_tarjeta       | int(11)     | NO   | MUL | NULL    |       |
+| id_clientes      | int(11)     | NO   | MUL | NULL    |       |
+| fecha_emision    | date        | NO   |     | NULL    |       |
+| fecha_expiracion | date        | NO   |     | NULL    |       |
+| pin              | int(11)     | NO   |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+6 rows in set (0.0028 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select card_number, id_tarjeta, id_cliente from asignacion_tarjetas;
+ERROR: 1054 (42S22): Unknown column 'id_cliente' in 'field list'
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select card_number, id_tarjeta, id_clientes from asignacion_tarjetas;
++-------------+------------+-------------+
+| card_number | id_tarjeta | id_clientes |
++-------------+------------+-------------+
+| 340525465   |          1 |           1 |
++-------------+------------+-------------+
+1 row in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.card_number, B.nombre from asignacion_tarjetas a inner join tarjetas
+                                      -> B on a.id_tarjeta = b.id_tarjeta;
++-------------+------------------+
+| card_number | nombre           |
++-------------+------------------+
+| 340525465   | American Express |
++-------------+------------------+
+1 row in set (0.0529 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc clientes_banco;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| id_clientes | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre      | varchar(50) | NO   |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0021 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.card_number, B.nombre from asignacion_tarjetas a inner join tarjetas B on a.id_cliente = b.id_cliente;
+ERROR: 1054 (42S22): Unknown column 'a.id_cliente' in 'on clause'
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.card_number, B.nombre from asignacion_tarjetas a inner join tarjetas B on a.id_clientes = b.id_clientes;
+ERROR: 1054 (42S22): Unknown column 'b.id_clientes' in 'on clause'
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.card_number, B.nombre from asignacion_tarjetas a inner join clientes_banco B on a.id_clientes = b.id_clientes;
++-------------+---------------+
+| card_number | nombre        |
++-------------+---------------+
+| 340525465   | Karly M Soria |
++-------------+---------------+
+1 row in set (0.0302 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.card_number, B.nombre, C.nombre from asignacion_tarjetas A inner join
+                                      -> tarjetas B on a.id_tarjeta = b.id_tarjeta inner join clientes_banco C on A.id_clientes = c.id_clientes;
++-------------+------------------+---------------+
+| card_number | nombre           | nombre        |
++-------------+------------------+---------------+
+| 340525465   | American Express | Karly M Soria |
++-------------+------------------+---------------+
+1 row in set (0.0013 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL >

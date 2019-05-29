@@ -1,0 +1,442 @@
+MySQL Shell 8.0.14
+
+Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+ MySQL  JS > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 21
+Server version: 8.0.14 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > show tables;
+Empty set (0.0025 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > \use sakila
+Default schema set to `sakila`.
+Fetching table and column names from `sakila` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0021 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create tableA(
+                                      -> id int key auto_increment,
+                                      -> nombre varchar(10));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tableA(
+id int key auto_increment,
+nombre varchar(10))' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table tablaA( id int key auto_increment, nombre varchar(10));
+Query OK, 0 rows affected (3.7337 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table tablaB( id int key auto_increment, nombre varchar(10));
+Query OK, 0 rows affected (1.7622 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc tablaA;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(10) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0593 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc tablaB;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(10) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0023 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > INSER
+                                      -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSER' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into tabalaA (nombre) values ("A"), ("B"), ("C"), ("D");
+ERROR: 1146 (42S02): Table 'eva_2.tabalaa' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into tablaA (nombre) values ("A"), ("B"), ("C"), ("D");
+Query OK, 4 rows affected (0.3577 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into tablaB (nombre) values ("A"), ("B"), ("X"), ("Y");
+Query OK, 4 rows affected (0.3076 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tabla A,B;
+ERROR: 1146 (42S02): Table 'eva_2.tabla' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaA tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
++----+--------+
+4 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaA,tablaB;
++----+--------+----+--------+
+| id | nombre | id | nombre |
++----+--------+----+--------+
+|  1 | A      |  1 | A      |
+|  2 | B      |  1 | A      |
+|  3 | C      |  1 | A      |
+|  4 | D      |  1 | A      |
+|  1 | A      |  2 | B      |
+|  2 | B      |  2 | B      |
+|  3 | C      |  2 | B      |
+|  4 | D      |  2 | B      |
+|  1 | A      |  3 | X      |
+|  2 | B      |  3 | X      |
+|  3 | C      |  3 | X      |
+|  4 | D      |  3 | X      |
+|  1 | A      |  4 | Y      |
+|  2 | B      |  4 | Y      |
+|  3 | C      |  4 | Y      |
+|  4 | D      |  4 | Y      |
++----+--------+----+--------+
+16 rows in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre, B.nombre
+                                      -> from tabla A, tabla B;
+ERROR: 1146 (42S02): Table 'eva_2.tabla' doesn't exist
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre, B.nombre from tablaA A, tablaB B;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| A      | A      |
+| B      | A      |
+| C      | A      |
+| D      | A      |
+| A      | B      |
+| B      | B      |
+| C      | B      |
+| D      | B      |
+| A      | X      |
+| B      | X      |
+| C      | X      |
+| D      | X      |
+| A      | Y      |
+| B      | Y      |
+| C      | Y      |
+| D      | Y      |
++--------+--------+
+16 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select A.nombre as nomA, B.nombre as nomB from tablaA A, tablaB B;
++------+------+
+| nomA | nomB |
++------+------+
+| A    | A    |
+| B    | A    |
+| C    | A    |
+| D    | A    |
+| A    | B    |
+| B    | B    |
+| C    | B    |
+| D    | B    |
+| A    | X    |
+| B    | X    |
+| C    | X    |
+| D    | X    |
+| A    | Y    |
+| B    | Y    |
+| C    | Y    |
+| D    | Y    |
++------+------+
+16 rows in set (0.0010 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > \use saqila
+MySQL Error 1049: Unknown database 'saqila'
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > \use sakila
+Default schema set to `sakila`.
+Fetching table and column names from `sakila` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  sakila  SQL > show tables;
++----------------------------+
+| Tables_in_sakila           |
++----------------------------+
+| actor                      |
+| actor_info                 |
+| address                    |
+| category                   |
+| city                       |
+| country                    |
+| customer                   |
+| customer_list              |
+| film                       |
+| film_actor                 |
+| film_category              |
+| film_list                  |
+| film_text                  |
+| inventory                  |
+| language                   |
+| nicer_but_slower_film_list |
+| payment                    |
+| rental                     |
+| sales_by_film_category     |
+| sales_by_store             |
+| staff                      |
+| staff_list                 |
+| store                      |
++----------------------------+
+23 rows in set (0.0020 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select count(*) from coustomer;
+ERROR: 1146 (42S02): Table 'sakila.coustomer' doesn't exist
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select count(*) from customer;
++----------+
+| count(*) |
++----------+
+|      599 |
++----------+
+1 row in set (1.1187 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select count(*) from film;
++----------+
+| count(*) |
++----------+
+|     1000 |
++----------+
+1 row in set (0.3221 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > desc customer;
++-------------+----------------------+------+-----+-------------------+-----------------------------------------------+
+| Field       | Type                 | Null | Key | Default           | Extra                                         |
++-------------+----------------------+------+-----+-------------------+-----------------------------------------------+
+| customer_id | smallint(5) unsigned | NO   | PRI | NULL              | auto_increment                                |
+| store_id    | tinyint(3) unsigned  | NO   | MUL | NULL              |                                               |
+| first_name  | varchar(45)          | NO   |     | NULL              |                                               |
+| last_name   | varchar(45)          | NO   | MUL | NULL              |                                               |
+| email       | varchar(50)          | YES  |     | NULL              |                                               |
+| address_id  | smallint(5) unsigned | NO   | MUL | NULL              |                                               |
+| active      | tinyint(1)           | NO   |     | 1                 |                                               |
+| create_date | datetime             | NO   |     | NULL              |                                               |
+| last_update | timestamp            | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++-------------+----------------------+------+-----+-------------------+-----------------------------------------------+
+9 rows in set (0.0025 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > desc film;
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type                                                                | Null | Key | Default           | Extra                                         |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| film_id              | smallint(5) unsigned                                                | NO   | PRI | NULL              | auto_increment                                |
+| title                | varchar(255)                                                        | NO   | MUL | NULL              |                                               |
+| description          | text                                                                | YES  |     | NULL              |                                               |
+| release_year         | year(4)                                                             | YES  |     | NULL              |                                               |
+| language_id          | tinyint(3) unsigned                                                 | NO   | MUL | NULL              |                                               |
+| original_language_id | tinyint(3) unsigned                                                 | YES  | MUL | NULL              |                                               |
+| rental_duration      | tinyint(3) unsigned                                                 | NO   |     | 3                 |                                               |
+| rental_rate          | decimal(4,2)                                                        | NO   |     | 4.99              |                                               |
+| length               | smallint(5) unsigned                                                | YES  |     | NULL              |                                               |
+| replacement_cost     | decimal(5,2)                                                        | NO   |     | 19.99             |                                               |
+| rating               | enum('G','PG','PG-13','R','NC-17')                                  | YES  |     | G                 |                                               |
+| special_features     | set('Trailers','Commentaries','Deleted Scenes','Behind the Scenes') | YES  |     | NULL              |                                               |
+| last_update          | timestamp                                                           | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+---------------------------------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+13 rows in set (0.0023 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select A.first_name, B.title
+                                       -> from customera, film B
+                                       -> limit 100;
+ERROR: 1146 (42S02): Table 'sakila.customera' doesn't exist
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select A.first_name, B.title from customer, film B limit 100;
+ERROR: 1054 (42S22): Unknown column 'A.first_name' in 'field list'
+
+ MySQL  localhost:3306 ssl  sakila  SQL > select A.first_name, B.title from customer a, film B limit 100;
++------------+------------------+
+| first_name | title            |
++------------+------------------+
+| MARY       | ACADEMY DINOSAUR |
+| PATRICIA   | ACADEMY DINOSAUR |
+| LINDA      | ACADEMY DINOSAUR |
+| BARBARA    | ACADEMY DINOSAUR |
+| ELIZABETH  | ACADEMY DINOSAUR |
+| JENNIFER   | ACADEMY DINOSAUR |
+| MARIA      | ACADEMY DINOSAUR |
+| SUSAN      | ACADEMY DINOSAUR |
+| MARGARET   | ACADEMY DINOSAUR |
+| DOROTHY    | ACADEMY DINOSAUR |
+| LISA       | ACADEMY DINOSAUR |
+| NANCY      | ACADEMY DINOSAUR |
+| KAREN      | ACADEMY DINOSAUR |
+| BETTY      | ACADEMY DINOSAUR |
+| HELEN      | ACADEMY DINOSAUR |
+| SANDRA     | ACADEMY DINOSAUR |
+| DONNA      | ACADEMY DINOSAUR |
+| CAROL      | ACADEMY DINOSAUR |
+| RUTH       | ACADEMY DINOSAUR |
+| SHARON     | ACADEMY DINOSAUR |
+| MICHELLE   | ACADEMY DINOSAUR |
+| LAURA      | ACADEMY DINOSAUR |
+| SARAH      | ACADEMY DINOSAUR |
+| KIMBERLY   | ACADEMY DINOSAUR |
+| DEBORAH    | ACADEMY DINOSAUR |
+| JESSICA    | ACADEMY DINOSAUR |
+| SHIRLEY    | ACADEMY DINOSAUR |
+| CYNTHIA    | ACADEMY DINOSAUR |
+| ANGELA     | ACADEMY DINOSAUR |
+| MELISSA    | ACADEMY DINOSAUR |
+| BRENDA     | ACADEMY DINOSAUR |
+| AMY        | ACADEMY DINOSAUR |
+| ANNA       | ACADEMY DINOSAUR |
+| REBECCA    | ACADEMY DINOSAUR |
+| VIRGINIA   | ACADEMY DINOSAUR |
+| KATHLEEN   | ACADEMY DINOSAUR |
+| PAMELA     | ACADEMY DINOSAUR |
+| MARTHA     | ACADEMY DINOSAUR |
+| DEBRA      | ACADEMY DINOSAUR |
+| AMANDA     | ACADEMY DINOSAUR |
+| STEPHANIE  | ACADEMY DINOSAUR |
+| CAROLYN    | ACADEMY DINOSAUR |
+| CHRISTINE  | ACADEMY DINOSAUR |
+| MARIE      | ACADEMY DINOSAUR |
+| JANET      | ACADEMY DINOSAUR |
+| CATHERINE  | ACADEMY DINOSAUR |
+| FRANCES    | ACADEMY DINOSAUR |
+| ANN        | ACADEMY DINOSAUR |
+| JOYCE      | ACADEMY DINOSAUR |
+| DIANE      | ACADEMY DINOSAUR |
+| ALICE      | ACADEMY DINOSAUR |
+| JULIE      | ACADEMY DINOSAUR |
+| HEATHER    | ACADEMY DINOSAUR |
+| TERESA     | ACADEMY DINOSAUR |
+| DORIS      | ACADEMY DINOSAUR |
+| GLORIA     | ACADEMY DINOSAUR |
+| EVELYN     | ACADEMY DINOSAUR |
+| JEAN       | ACADEMY DINOSAUR |
+| CHERYL     | ACADEMY DINOSAUR |
+| MILDRED    | ACADEMY DINOSAUR |
+| KATHERINE  | ACADEMY DINOSAUR |
+| JOAN       | ACADEMY DINOSAUR |
+| ASHLEY     | ACADEMY DINOSAUR |
+| JUDITH     | ACADEMY DINOSAUR |
+| ROSE       | ACADEMY DINOSAUR |
+| JANICE     | ACADEMY DINOSAUR |
+| KELLY      | ACADEMY DINOSAUR |
+| NICOLE     | ACADEMY DINOSAUR |
+| JUDY       | ACADEMY DINOSAUR |
+| CHRISTINA  | ACADEMY DINOSAUR |
+| KATHY      | ACADEMY DINOSAUR |
+| THERESA    | ACADEMY DINOSAUR |
+| BEVERLY    | ACADEMY DINOSAUR |
+| DENISE     | ACADEMY DINOSAUR |
+| TAMMY      | ACADEMY DINOSAUR |
+| IRENE      | ACADEMY DINOSAUR |
+| JANE       | ACADEMY DINOSAUR |
+| LORI       | ACADEMY DINOSAUR |
+| RACHEL     | ACADEMY DINOSAUR |
+| MARILYN    | ACADEMY DINOSAUR |
+| ANDREA     | ACADEMY DINOSAUR |
+| KATHRYN    | ACADEMY DINOSAUR |
+| LOUISE     | ACADEMY DINOSAUR |
+| SARA       | ACADEMY DINOSAUR |
+| ANNE       | ACADEMY DINOSAUR |
+| JACQUELINE | ACADEMY DINOSAUR |
+| WANDA      | ACADEMY DINOSAUR |
+| BONNIE     | ACADEMY DINOSAUR |
+| JULIA      | ACADEMY DINOSAUR |
+| RUBY       | ACADEMY DINOSAUR |
+| LOIS       | ACADEMY DINOSAUR |
+| TINA       | ACADEMY DINOSAUR |
+| PHYLLIS    | ACADEMY DINOSAUR |
+| NORMA      | ACADEMY DINOSAUR |
+| PAULA      | ACADEMY DINOSAUR |
+| DIANA      | ACADEMY DINOSAUR |
+| ANNIE      | ACADEMY DINOSAUR |
+| LILLIAN    | ACADEMY DINOSAUR |
+| EMILY      | ACADEMY DINOSAUR |
+| ROBIN      | ACADEMY DINOSAUR |
++------------+------------------+
+100 rows in set (0.1162 sec)
+
+ MySQL  localhost:3306 ssl  sakila  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaA
+                                      -> union
+                                      -> select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
+|  3 | X      |
+|  4 | Y      |
++----+--------+
+6 rows in set (0.0279 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from tablaA
+                                      -> union all
+                                      -> select * from tablaB;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
+|  1 | A      |
+|  2 | B      |
+|  3 | X      |
+|  4 | Y      |
++----+--------+
+8 rows in set (0.1626 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL >

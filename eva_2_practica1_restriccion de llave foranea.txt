@@ -1,0 +1,234 @@
+MySQL Shell 8.0.14
+
+Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+ MySQL  JS > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 34
+Server version: 8.0.14 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  localhost:3306 ssl  SQL > \use eva_2
+Default schema set to `eva_2`.
+Fetching table and column names from `eva_2` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table padre(
+                                      -> id int key auto_increment,
+                                      -> nombre varchar(50));
+Query OK, 0 rows affected (1.8925 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc padre;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(50) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+2 rows in set (0.1110 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table hijo(
+                                      -> id int key auto_increment,
+                                      -> id_padre int,
+                                      -> foreign key (id_padre)
+                                      -> references padre(id)
+                                      -> on delete cascade on update cascade;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 6
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table hijo( id int key auto_increment, id_padre int, foreign key (id_padre) references padre(id) on delete cascade on update cascade);
+Query OK, 0 rows affected (1.5098 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc hijo;
++----------+---------+------+-----+---------+----------------+
+| Field    | Type    | Null | Key | Default | Extra          |
++----------+---------+------+-----+---------+----------------+
+| id       | int(11) | NO   | PRI | NULL    | auto_increment |
+| id_padre | int(11) | YES  | MUL | NULL    |                |
++----------+---------+------+-----+---------+----------------+
+2 rows in set (0.0275 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc padre;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(50) | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0023 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into padre(nombre) values ("Susana");
+Query OK, 1 row affected (0.2354 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from padre;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | Susana |
++----+--------+
+1 row in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into padre(nombre) values ("Unicornio");
+Query OK, 1 row affected (0.2368 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into padre(nombre) values ("Rosa");
+Query OK, 1 row affected (0.1667 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from padre;
++----+-----------+
+| id | nombre    |
++----+-----------+
+|  1 | Susana    |
+|  2 | Unicornio |
+|  3 | Rosa      |
++----+-----------+
+3 rows in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into hijo(id_padre) values (1);
+Query OK, 1 row affected (0.2244 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into hijo(id_padre) values (2);
+Query OK, 1 row affected (0.1733 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into hijo(id_padre) values (3);
+Query OK, 1 row affected (0.0987 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into hijo(id_padre) values (1);
+Query OK, 1 row affected (0.1689 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from hijo;
++----+----------+
+| id | id_padre |
++----+----------+
+|  1 |        1 |
+|  4 |        1 |
+|  2 |        2 |
+|  3 |        3 |
++----+----------+
+4 rows in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from padre;
++----+-----------+
+| id | nombre    |
++----+-----------+
+|  1 | Susana    |
+|  2 | Unicornio |
+|  3 | Rosa      |
++----+-----------+
+3 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > delete from padre where id=3;
+Query OK, 1 row affected (0.3057 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from hijo;
++----+----------+
+| id | id_padre |
++----+----------+
+|  1 |        1 |
+|  4 |        1 |
+|  2 |        2 |
++----+----------+
+3 rows in set (0.0007 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from padre;
++----+-----------+
+| id | nombre    |
++----+-----------+
+|  1 | Susana    |
+|  2 | Unicornio |
++----+-----------+
+2 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > update padre
+                                      -> set id=5
+                                      -> where id=2;
+Query OK, 1 row affected (0.2156 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from padre;
++----+-----------+
+| id | nombre    |
++----+-----------+
+|  1 | Susana    |
+|  5 | Unicornio |
++----+-----------+
+2 rows in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from hijo;
++----+----------+
+| id | id_padre |
++----+----------+
+|  1 |        1 |
+|  4 |        1 |
+|  2 |        5 |
++----+----------+
+3 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table master(
+                                      -> id int key auto_increment,
+                                      -> name varchar(50));
+Query OK, 0 rows affected (0.5967 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > create table detail(
+                                      -> id int key auto_increment,
+                                      -> id_master int,
+                                      -> foreign key(id_master) references master(id)
+                                      -> on delete restrict on update cascade);
+Query OK, 0 rows affected (0.7381 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into master (name) values ("xxx");
+Query OK, 1 row affected (0.2004 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into master (name) values ("zzz");
+Query OK, 1 row affected (0.2211 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > insert into master (name) values ("yyy");
+Query OK, 1 row affected (0.1565 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc table master;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table master' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > desc master;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0025 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > select * from master;
++----+------+
+| id | name |
++----+------+
+|  1 | xxx  |
+|  2 | zzz  |
+|  3 | yyy  |
++----+------+
+3 rows in set (0.0009 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > delete from master(1);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(1)' at line 1
+
+ MySQL  localhost:3306 ssl  eva_2  SQL > show create table detail;
++--------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table  | Create Table                                                                                                                                                                                                                                                                                                                                         |
++--------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| detail | CREATE TABLE `detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_master` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_master` (`id_master`),
+  CONSTRAINT `detail_ibfk_1` FOREIGN KEY (`id_master`) REFERENCES `master` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.1350 sec)
+
+ MySQL  localhost:3306 ssl  eva_2  SQL >
